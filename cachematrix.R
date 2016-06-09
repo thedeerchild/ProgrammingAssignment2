@@ -1,15 +1,31 @@
-## Put comments here that give an overall description of what your
-## functions do
+## Cached version of a Matrix to support efficient inversion
 
-## Write a short comment describing this function
+## Wrapper function for matrix
 
 makeCacheMatrix <- function(x = matrix()) {
+  inv <- NULL
 
+  get <- function() x
+  set <- function(new_x) {
+    x <<- new_x
+    inv <<- NULL
+  }
+  get_inv <- function() inv
+  set_inv <- function(new_inv) inv <<- new_inv
+
+  list(set = set, get = get,
+       set_inv = set_inv,
+       get_inv = get_inv)
 }
 
 
-## Write a short comment describing this function
+## Computes cached inverse
 
 cacheSolve <- function(x, ...) {
-        ## Return a matrix that is the inverse of 'x'
+  inv <- x$get_inv()
+  if(is.null(inv)) {
+    inv <- solve(x$get())
+    x$set_inv(inv)
+  }
+  inv
 }
